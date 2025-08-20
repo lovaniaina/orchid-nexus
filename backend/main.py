@@ -207,7 +207,7 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 # --- App setup and dependencies ---
-app = FastAPI(title="Orchid Nexus API"); app.mount("/static", StaticFiles(directory="static"), name="static"); origins = ["http://localhost:5173", "http://127.0.0.1:5173"]; app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]); Base.metadata.create_all(bind=engine)
+app = FastAPI(title="Orchid Nexus API"); app.mount("/static", StaticFiles(directory="static"), name="static"); origins = ["http://localhost:5173", "http://127.0.0.1:5173",  "https://boisterous-jalebi-7b7528.netlify.app"]; app.add_middleware(CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]); Base.metadata.create_all(bind=engine)
 def get_db():
     db = SessionLocal()
     try: yield db
