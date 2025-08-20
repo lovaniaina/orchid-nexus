@@ -1,0 +1,15 @@
+# /netlify.toml - FINAL NETLIFY CONFIGURATION
+
+[build]
+  # This tells Netlify where to run the build command
+  base    = "frontend"
+  # This is the command to build the site
+  command = "npm run build"
+  # This is the directory that contains the finished site
+  publish = "frontend/dist"
+
+[[redirects]]
+  # This is the rewrite rule for Single-Page Applications
+  from = "/*"
+  to = "/index.html"
+  status = 200
