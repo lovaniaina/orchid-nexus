@@ -1,0 +1,72 @@
+{
+  "login": {
+    "title": "Orchid Nexus",
+    "createAccountTitle": "Create Account",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "roleLabel": "Role",
+    "loginButton": "Log In",
+    "signupButton": "Sign Up",
+    "toggleToSignup": "Need an account? Sign Up",
+    "toggleToLogin": "Already have an account? Log In",
+    "signupFailed": "Signup failed.",
+    "loginFailed": "Login failed. Please check credentials.",
+    "signupSuccess": "Account created! Please log in."
+  },
+  "project": {
+    "selectTitle": "Select a Project",
+    "createTitle": "Create New Project",
+    "createPlaceholder": "Enter project name..."
+  },
+  "dashboard": {
+    "backButton": "Projects",
+    "logoutButton": "Log Out",
+    "programsTab": "Programs",
+    "logisticsTab": "Logistics",
+    "pendingTasks": "Pending",
+    "overdueTasks": "Overdue",
+    "completedTasks": "Completed",
+    "taskStatus": "Task Status",
+    "allTasksFilter": "All Tasks",
+    "myTasksFilter": "My Tasks",
+    "createObjective": "Create New Objective",
+    "objectivePlaceholder": "Enter objective name..."
+  },
+  "activity": {
+    "tasks": "Tasks",
+    "indicators": "Activity Indicators",
+    "finance": "Finance",
+    "newActivityPlaceholder": "New activity...",
+    "addActivityButton": "Add Activity"
+  },
+  "logistics": {
+    "dashboardTitle": "Logistics Dashboard",
+    "inventoryTitle": "Current Inventory",
+    "itemHeader": "Item",
+    "locationHeader": "Location",
+    "quantityHeader": "Quantity",
+    "thresholdHeader": "Threshold",
+    "noInventory": "No inventory records found.",
+    "logDistribution": "Log Distribution",
+    "selectItem": "Select Item",
+    "selectLocation": "Select Location",
+    "distributeButton": "Distribute",
+    "addStock": "Add Stock",
+    "addStockButton": "Add Stock",
+    "thresholdPlaceholder": "Low Stock Threshold (optional)",
+    "createMasterData": "Create Master Data",
+    "newItemPlaceholder": "New Item Name...",
+    "addItemButton": "Add Item",
+    "newLocationPlaceholder": "New Location Name...",
+    "addLocationButton": "Add Location",
+    "alertsTitle": "Low Stock Alerts"
+  },
+  "finance": {
+    "noBudget": "No budget set for this activity.",
+    "spentBudget": "Spent / Budget",
+    "updateButton": "Update",
+    "setButton": "Set",
+    "setBudgetPlaceholder": "Set Total Budget...",
+    "logExpenseButton": "Log Expense"
+  }
+}

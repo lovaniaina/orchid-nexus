@@ -1,0 +1,72 @@
+{
+  "login": {
+    "title": "Orchid Nexus",
+    "createAccountTitle": "Créer un Compte",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "roleLabel": "Rôle",
+    "loginButton": "Se connecter",
+    "signupButton": "S'inscrire",
+    "toggleToSignup": "Besoin d'un compte? S'inscrire",
+    "toggleToLogin": "Vous avez déjà un compte? Se connecter",
+    "signupFailed": "L'inscription a échoué.",
+    "loginFailed": "Échec de la connexion. Veuillez vérifier vos identifiants.",
+    "signupSuccess": "Compte créé! Veuillez vous connecter."
+  },
+  "project": {
+    "selectTitle": "Sélectionner un Projet",
+    "createTitle": "Créer un Nouveau Projet",
+    "createPlaceholder": "Entrez le nom du projet..."
+  },
+  "dashboard": {
+    "backButton": "Projets",
+    "logoutButton": "Se déconnecter",
+    "programsTab": "Programmes",
+    "logisticsTab": "Logistique",
+    "pendingTasks": "En attente",
+    "overdueTasks": "En retard",
+    "completedTasks": "Terminé",
+    "taskStatus": "Statut des Tâches",
+    "allTasksFilter": "Toutes les Tâches",
+    "myTasksFilter": "Mes Tâches",
+    "createObjective": "Créer un Nouvel Objectif",
+    "objectivePlaceholder": "Entrez le nom de l'objectif..."
+  },
+  "activity": {
+    "tasks": "Tâches",
+    "indicators": "Indicateurs d'Activité",
+    "finance": "Finance",
+    "newActivityPlaceholder": "Nouvelle activité...",
+    "addActivityButton": "Ajouter une Activité"
+  },
+  "logistics": {
+    "dashboardTitle": "Tableau de Bord Logistique",
+    "inventoryTitle": "Inventaire Actuel",
+    "itemHeader": "Article",
+    "locationHeader": "Emplacement",
+    "quantityHeader": "Quantité",
+    "thresholdHeader": "Seuil",
+    "noInventory": "Aucun article en inventaire.",
+    "logDistribution": "Enregistrer une Distribution",
+    "selectItem": "Sélectionner un article",
+    "selectLocation": "Sélectionner un emplacement",
+    "distributeButton": "Distribuer",
+    "addStock": "Ajouter au Stock",
+    "addStockButton": "Ajouter au Stock",
+    "thresholdPlaceholder": "Seuil de stock bas (optionnel)",
+    "createMasterData": "Créer des Données de Base",
+    "newItemPlaceholder": "Nom du nouvel article...",
+    "addItemButton": "Ajouter Article",
+    "newLocationPlaceholder": "Nom du nouvel emplacement...",
+    "addLocationButton": "Ajouter Emplacement",
+    "alertsTitle": "Alertes de Stock Bas"
+  },
+  "finance": {
+    "noBudget": "Aucun budget défini pour cette activité.",
+    "spentBudget": "Dépensé / Budget",
+    "updateButton": "Mettre à jour",
+    "setButton": "Définir",
+    "setBudgetPlaceholder": "Définir le Budget Total...",
+    "logExpenseButton": "Enregistrer une Dépense"
+  }
+}
