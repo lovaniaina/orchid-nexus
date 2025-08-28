@@ -1,17 +1,17 @@
-# /netlify.toml - FINAL CORRECTED VERSION WITH HEADERS
+# /netlify.toml - FINAL CORRECTED VERSION
 
 [build]
+  # Tell Netlify to run all commands from inside the "frontend" folder
   base    = "frontend"
+  
+  # The command to build the site
   command = "npm run build"
-  publish = "frontend/dist"
+  
+  # The folder (relative to the base) that contains the finished site
+  publish = "dist"
 
 [[redirects]]
+  # The rewrite rule for Single-Page Applications
   from = "/*"
   to = "/index.html"
   status = 200
-
-# ADD THIS ENTIRE SECTION
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Content-Security-Policy = "default-src 'self' https://orchid-nexus-backend.onrender.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://orchid-nexus-backend.onrender.com wss://orchid-nexus-backend.onrender.com;"
