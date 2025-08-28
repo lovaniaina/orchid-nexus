@@ -1,16 +1,21 @@
-# /netlify.toml - FINAL DEFINITIVE VERSION
+# /netlify.toml - FINAL CORRECTED VERSION
 
 [build]
+  # This tells Netlify where to run the build command
   base    = "frontend"
+  
+  # This is the command to build the site
   command = "npm run build"
-  publish = "frontend/dist"
+  
+  # This is the directory (relative to the base) that contains the finished site
+  publish = "dist"
 
 [[redirects]]
+  # This is the rewrite rule for Single-Page Applications
   from = "/*"
   to = "/index.html"
   status = 200
 
-# This section is the final fix for the CSP 'eval' error
 [[headers]]
   for = "/*"
   [headers.values]
