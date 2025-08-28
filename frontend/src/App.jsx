@@ -1,4 +1,4 @@
-// /frontend/src/App.jsx - FINAL COMPLETE VERSION WITH EXPORT
+// /frontend/src/App.jsx - FINAL COMPLETE STABLE VERSION
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
@@ -62,15 +62,8 @@ function ProjectSelectionPage({ onSelectProject, onLogout, currentUser }) {
   const handleCreateProject = async (name) => { try { await axios.post(`${API_BASE_URL}/projects/`, { name }); fetchProjects(); } catch (err) { console.error('Failed to create project', err); } };
   return ( <div className="app-container"><header style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}><h1>{t('projectSelection.title')}</h1><div style={{display: 'flex', alignItems: 'center'}}><LanguageSwitcher /><button onClick={onLogout} className="logout-button">{t('projectSelection.logoutButton')}</button></div></header><main className="project-selection-main"><div className="project-list">{projects.map(p => ( <button key={p.id} onClick={() => onSelectProject(p.id)} className="project-card">{p.name}</button> ))}</div>{ (currentUser && currentUser.role === 'Project Manager') && <div className="project-add-form-container"><h3>Create New Project</h3><SimpleAddForm placeholder="Enter project name..." onSubmit={handleCreateProject} cta="+ Create"/></div>} </main></div> );
 }
-// All other components are defined below...
-const LogisticsDashboard = ({ currentUser }) => { 
-    const [inventory, setInventory] = useState([]); const [items, setItems] = useState([]); const [locations, setLocations] = useState([]); const [error, setError] = useState(''); const [success, setSuccess] = useState('');
-    const fetchData = useCallback(async () => { try { setError(''); const [invRes, itemsRes, locsRes] = await Promise.all([ axios.get(`${API_BASE_URL}/inventory/`), axios.get(`${API_BASE_URL}/items/`), axios.get(`${API_BASE_URL}/locations/`) ]); setInventory(invRes.data); setItems(itemsRes.data); setLocations(locsRes.data); } catch (err) { console.error(err); setError("Failed to fetch logistics data."); } }, []);
-    useEffect(() => { fetchData(); }, [fetchData]);
-    const showSuccess = (msg) => { setSuccess(msg); setTimeout(() => setSuccess(''), 4000); };
-    const isManager = currentUser.role === 'Project Manager';
-    return ( <div className="logistics-container"> {error && <p className="error-message">{error}</p>} {success && <p className="success-message">{success}</p>} <LowStockAlerts /> <div className="dashboard-grid"> <div className="dashboard-main-content"> <div className="objective-panel"> <div className="panel-header-objective"><h3>Current Inventory</h3></div> <div className="objective-content" style={{ padding: 0 }}> <table style={{ width: '100%', borderCollapse: 'collapse' }}> <thead style={{ backgroundColor: 'var(--surface-subtle)' }}> <tr> <th style={{ padding: '1rem', textAlign: 'left' }}>Item</th> <th style={{ padding: '1rem', textAlign: 'left' }}>Location</th> <th style={{ padding: '1rem', textAlign: 'right' }}>Quantity</th> <th style={{ padding: '1rem', textAlign: 'right' }}>Threshold</th> </tr> </thead> <tbody> {inventory.map(inv => ( <tr key={inv.id} style={{ borderBottom: '1px solid var(--surface-border)' }}> <td style={{ padding: '1rem' }}>{inv.item.name}</td> <td style={{ padding: '1rem' }}>{inv.location.name}</td> <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold' }}>{inv.quantity}</td> <td style={{ padding: '1rem', textAlign: 'right', color: 'var(--text-secondary)' }}>{inv.low_stock_threshold > 0 ? inv.low_stock_threshold : 'N/A'}</td> </tr> ))} {inventory.length === 0 && ( <tr><td colSpan="4" style={{ padding: '1rem', textAlign: 'center' }}>No inventory records found.</td></tr> )} </tbody> </table> </div> </div> </div> <aside className="dashboard-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}> <DistributionForm items={items} locations={locations} onDistribute={() => {fetchData(); showSuccess("Distribution logged successfully!");}} onError={setError} /> <StockingForm items={items} locations={locations} onStock={() => {fetchData(); showSuccess("Stock added successfully!");}} onError={setError} isManager={isManager} /> {isManager && <ItemLocationCreator onCreate={() => {fetchData(); showSuccess("New item/location created!");}} onError={setError} />} </aside> </div> </div> );
-};
+
+// --- ALL DASHBOARD COMPONENTS ---
 const LowStockAlerts = () => {
     const [alerts, setAlerts] = useState([]);
     useEffect(() => { axios.get(`${API_BASE_URL}/inventory/low-stock-alerts`).then(res => setAlerts(res.data)).catch(err => console.error("Failed to fetch low stock alerts", err))}, []);
@@ -80,6 +73,14 @@ const LowStockAlerts = () => {
 const DistributionForm = ({ items, locations, onDistribute, onError }) => { const [itemId, setItemId] = useState(''); const [locationId, setLocationId] = useState(''); const [quantity, setQuantity] = useState(''); const handleSubmit = async (e) => { e.preventDefault(); onError(''); try { await axios.post(`${API_BASE_URL}/inventory/distribute`, { item_id: parseInt(itemId), location_id: parseInt(locationId), quantity: parseInt(quantity) }); onDistribute(); setItemId(''); setLocationId(''); setQuantity(''); } catch (err) { onError(err.response?.data?.detail || "Distribution failed."); } }; return ( <div className="hud-card"> <h4>Log Distribution</h4> <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> <select value={itemId} onChange={e => setItemId(e.target.value)} required><option value="">Select Item</option>{items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}</select> <select value={locationId} onChange={e => setLocationId(e.target.value)} required><option value="">Select Location</option>{locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select> <input type="number" min="1" value={quantity} onChange={e => setQuantity(e.target.value)} placeholder="Quantity" required /> <button type="submit" className="simple-add-form button">Distribute</button> </form> </div> ); };
 const StockingForm = ({ items, locations, onStock, onError, isManager }) => { const [itemId, setItemId] = useState(''); const [locationId, setLocationId] = useState(''); const [quantity, setQuantity] = useState(''); const [threshold, setThreshold] = useState(''); const handleSubmit = async (e) => { e.preventDefault(); onError(''); try { const payload = { item_id: parseInt(itemId), location_id: parseInt(locationId), quantity: parseInt(quantity) }; if (isManager && threshold) { payload.low_stock_threshold = parseInt(threshold); } await axios.post(`${API_BASE_URL}/inventory/stock`, payload); onStock(); setItemId(''); setLocationId(''); setQuantity(''); setThreshold(''); } catch (err) { onError(err.response?.data?.detail || "Adding stock failed."); } }; return ( <div className="hud-card"> <h4>Add Stock</h4> <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> <select value={itemId} onChange={e => setItemId(e.target.value)} required><option value="">Select Item</option>{items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}</select> <select value={locationId} onChange={e => setLocationId(e.target.value)} required><option value="">Select Location</option>{locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select> <input type="number" min="1" value={quantity} onChange={e => setQuantity(e.target.value)} placeholder="Quantity to Add" required /> {isManager && ( <input type="number" min="0" value={threshold} onChange={e => setThreshold(e.target.value)} placeholder="Low Stock Threshold (optional)" title="Set a number to get alerts when stock is low."/> )} <button type="submit" className="simple-add-form button">Add Stock</button> </form> </div> ); };
 const ItemLocationCreator = ({ onCreate, onError }) => { const handleCreate = async (type, name) => { try { await axios.post(`${API_BASE_URL}/${type}/`, { name }); onCreate(); } catch (err) { onError(`Failed to create ${type}. Name might already exist.`); } }; return ( <div className="hud-card"> <h4>Create Master Data</h4> <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}> <SimpleAddForm placeholder="New Item Name..." onSubmit={(name) => handleCreate('items', name)} cta="+ Add Item" /> <SimpleAddForm placeholder="New Location Name..." onSubmit={(name) => handleCreate('locations', name)} cta="+ Add Location" /> </div> </div> ); };
+const LogisticsDashboard = ({ currentUser }) => { 
+    const [inventory, setInventory] = useState([]); const [items, setItems] = useState([]); const [locations, setLocations] = useState([]); const [error, setError] = useState(''); const [success, setSuccess] = useState('');
+    const fetchData = useCallback(async () => { try { setError(''); const [invRes, itemsRes, locsRes] = await Promise.all([ axios.get(`${API_BASE_URL}/inventory/`), axios.get(`${API_BASE_URL}/items/`), axios.get(`${API_BASE_URL}/locations/`) ]); setInventory(invRes.data); setItems(itemsRes.data); setLocations(locsRes.data); } catch (err) { console.error(err); setError("Failed to fetch logistics data."); } }, []);
+    useEffect(() => { fetchData(); }, [fetchData]);
+    const showSuccess = (msg) => { setSuccess(msg); setTimeout(() => setSuccess(''), 4000); };
+    const isManager = currentUser.role === 'Project Manager';
+    return ( <div className="logistics-container"> {error && <p className="error-message">{error}</p>} {success && <p className="success-message">{success}</p>} <LowStockAlerts /> <div className="dashboard-grid"> <div className="dashboard-main-content"> <div className="objective-panel"> <div className="panel-header-objective"><h3>Current Inventory</h3></div> <div className="objective-content" style={{ padding: 0 }}> <table style={{ width: '100%', borderCollapse: 'collapse' }}> <thead style={{ backgroundColor: 'var(--surface-subtle)' }}> <tr> <th style={{ padding: '1rem', textAlign: 'left' }}>Item</th> <th style={{ padding: '1rem', textAlign: 'left' }}>Location</th> <th style={{ padding: '1rem', textAlign: 'right' }}>Quantity</th> <th style={{ padding: '1rem', textAlign: 'right' }}>Threshold</th> </tr> </thead> <tbody> {inventory.map(inv => ( <tr key={inv.id} style={{ borderBottom: '1px solid var(--surface-border)' }}> <td style={{ padding: '1rem' }}>{inv.item.name}</td> <td style={{ padding: '1rem' }}>{inv.location.name}</td> <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold' }}>{inv.quantity}</td> <td style={{ padding: '1rem', textAlign: 'right', color: 'var(--text-secondary)' }}>{inv.low_stock_threshold > 0 ? inv.low_stock_threshold : 'N/A'}</td> </tr> ))} {inventory.length === 0 && ( <tr><td colSpan="4" style={{ padding: '1rem', textAlign: 'center' }}>No inventory records found.</td></tr> )} </tbody> </table> </div> </div> </div> <aside className="dashboard-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}> <DistributionForm items={items} locations={locations} onDistribute={() => {fetchData(); showSuccess("Distribution logged successfully!");}} onError={setError} /> <StockingForm items={items} locations={locations} onStock={() => {fetchData(); showSuccess("Stock added successfully!");}} onError={setError} isManager={isManager} /> {isManager && <ItemLocationCreator onCreate={() => {fetchData(); showSuccess("New item/location created!");}} onError={setError} />} </aside> </div> </div> );
+};
 const FinancePanel = ({ activity, currentUser, onDataChange }) => { const [expenseAmount, setExpenseAmount] = useState(''); const [expenseDesc, setExpenseDesc] = useState(''); const [budgetAmount, setBudgetAmount] = useState(activity.budget?.total_amount || ''); const isManager = currentUser.role === 'Project Manager'; const budget = activity.budget; const totalExpenses = budget ? budget.expenses.reduce((acc, curr) => acc + curr.amount, 0) : 0; const burnRatePercentage = (budget && budget.total_amount > 0) ? (totalExpenses / budget.total_amount) * 100 : 0; const handleSetBudget = async (e) => { e.preventDefault(); try { await axios.post(`${API_BASE_URL}/budgets/`, { activity_id: activity.id, total_amount: parseFloat(budgetAmount) }); onDataChange(); } catch (err) { console.error("Failed to set budget", err); } }; const handleLogExpense = async (e) => { e.preventDefault(); if (!budget) { alert("Please set a budget for this activity before logging expenses."); return; } try { await axios.post(`${API_BASE_URL}/expenses/`, { budget_id: budget.id, amount: parseFloat(expenseAmount), description: expenseDesc }); setExpenseAmount(''); setExpenseDesc(''); onDataChange(); } catch (err) { console.error("Failed to log expense", err); } }; return ( <div> <h4>Finance</h4> {budget ? ( <div className="kpi-indicator"> <div className="kpi-info"> <span>Spent / Budget</span> <span>${totalExpenses.toFixed(2)} / ${budget.total_amount.toFixed(2)}</span> </div> <div className="progress-bar-background"><div className="progress-bar-foreground" style={{ width: `${Math.min(burnRatePercentage, 100)}%` }}></div></div> </div> ) : ( <p style={{fontSize: '0.9rem', color: 'var(--text-secondary)'}}>No budget set for this activity.</p> )} {isManager && ( <form onSubmit={handleSetBudget} className="simple-add-form" style={{marginBottom: '1rem'}}> <input type="number" step="0.01" value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)} placeholder="Set Total Budget..." required /> <button type="submit">{budget ? 'Update' : 'Set'}</button> </form> )} <form onSubmit={handleLogExpense} className="add-task-form" style={{borderTop: '1px solid var(--surface-border)', paddingTop: '1rem'}}> <input type="number" step="0.01" value={expenseAmount} onChange={e => setExpenseAmount(e.target.value)} placeholder="Expense Amount" required /> <input value={expenseDesc} onChange={e => setExpenseDesc(e.target.value)} placeholder="Expense Description" required /> <button type="submit" style={{gridColumn: 'span 2'}}>+ Log Expense</button> </form> {budget && budget.expenses.length > 0 && ( <ul className="deliverable-list" style={{marginTop: '1rem'}}> {budget.expenses.slice(0).reverse().map(exp => ( <li key={exp.id}> ${exp.amount.toFixed(2)} - {exp.description} <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)', float: 'right'}}> {new Date(exp.timestamp).toLocaleDateString()} </span> </li> ))} </ul> )} </div> ); };
 const KpiHistoryModal = ({ kpi, onClose }) => { return ( <div className="modal-overlay" onClick={onClose}><div className="modal-content" onClick={e => e.stopPropagation()}><div className="modal-header"><h3>History for {kpi.name}</h3><button onClick={onClose} className="modal-close-button">&times;</button></div><p>Chart is temporarily disabled.</p></div></div> ); };
 const KpiIndicator = ({ kpi, currentUser, onDataChange }) => { const [showHistory, setShowHistory] = useState(false); const progress = kpi.target_value > 0 ? ((kpi.current_value || 0) / kpi.target_value) * 100 : 0; const handleDelete = async () => { if (window.confirm(`Delete KPI: "${kpi.name}"?`)) { try { await axios.delete(`${API_BASE_URL}/kpis/${kpi.id}`); onDataChange(); } catch (err) { console.error(err); } } }; const isPrivileged = currentUser.role === 'Project Manager' || currentUser.role === 'Monitoring Officer'; return ( <div className="kpi-indicator"> {showHistory && <KpiHistoryModal kpi={kpi} onClose={() => setShowHistory(false)} />} <div className="kpi-info"><span>{kpi.name} {kpi.unit && `(${kpi.unit})`}</span><span>{kpi.current_value || 0} / {kpi.target_value}</span></div> <div className="progress-bar-background"><div className="progress-bar-foreground" style={{ width: `${Math.min(progress, 100)}%` }}></div></div> <div className="kpi-actions"><button onClick={() => setShowHistory(true)}>📈</button>{isPrivileged && <button onClick={handleDelete} className="delete-button-kpi">🗑️</button>}</div> </div> ); };
@@ -101,10 +102,7 @@ const DashboardPage = ({ project, onDataChange, onBack, onLogout, users, current
     ws.current = new WebSocket(wsUrl);
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === 'notification') {
-        setNotification(data.message);
-        combinedDataChange();
-      }
+      if (data.type === 'notification') { setNotification(data.message); combinedDataChange(); }
     };
     return () => { ws.current.close(); };
   }, [project.id, combinedDataChange]);
@@ -114,4 +112,55 @@ const DashboardPage = ({ project, onDataChange, onBack, onLogout, users, current
   const isManager = currentUser.role === 'Project Manager';
   return ( <div className="app-container"> {notification && <Notification message={notification} onDismiss={() => setNotification(null)} />} <header className="dashboard-header"><button onClick={onBack} className="back-button">← Projects</button><h1>{project.name}</h1><div style={{display: 'flex', alignItems: 'center'}}><LanguageSwitcher /><button onClick={onLogout} className="logout-button">{t('projectSelection.logoutButton')}</button></div></header> <div className="filter-bar" style={{marginBottom: '1.5rem'}}> <button onClick={() => setView('programs')} className={view === 'programs' ? 'active' : ''}>Programs</button> <button onClick={() => setView('logistics')} className={view === 'logistics' ? 'active' : ''}>Logistics</button> </div> {view === 'programs' ? ( <div className="dashboard-grid"> <div className="dashboard-main-content"> <DashboardHud summary={summaryData} /> <div className="filter-bar"><button onClick={() => setFilter({ type: 'all'})} className={filter.type === 'all' ? 'active' : ''}>All Tasks</button><button onClick={() => setFilter({ type: 'user', id: currentUser.id})} className={filter.type === 'user' ? 'active' : ''}>My Tasks</button></div> {project.objectives.map(objective => <ObjectivePanel key={objective.id} objective={objective} users={users} currentUser={currentUser} filter={filter} onDataChange={combinedDataChange} />)} {isManager && <div className="objective-panel" style={{marginTop: '1.5rem'}}><div className="objective-content"><h3>Create New Objective</h3><SimpleAddForm placeholder="Enter objective name..." onSubmit={handleObjectiveSubmit} cta="+ Create" /></div></div>} </div> <aside className="dashboard-sidebar"><TaskChart /></aside> </div> ) : ( <LogisticsDashboard currentUser={currentUser} /> )} </div> );
 }
+
+// --- MAIN APP COMPONENT ---
+function App() {
+  const [token, setToken] = useState(localStorage.getItem(TOKEN_KEY));
+  const [currentUser, setCurrentUser] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [projectData, setProjectData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const handleLogout = useCallback(() => { localStorage.removeItem(TOKEN_KEY); setToken(null); setSelectedProjectId(null); setProjectData(null); setCurrentUser(null); setAllUsers([]); }, []);
+  useEffect(() => {
+    if (token && !currentUser) {
+      setIsLoading(true);
+      Promise.all([ axios.get(`${API_BASE_URL}/users/me`), axios.get(`${API_BASE_URL}/users/`) ])
+        .then(([meRes, usersRes]) => { setCurrentUser(meRes.data); setAllUsers(usersRes.data); })
+        .catch(() => { handleLogout(); })
+        .finally(() => { setIsLoading(false); });
+    }
+  }, [token, currentUser, handleLogout]);
+  const fetchProjectData = useCallback(async () => {
+    if (!selectedProjectId || !token) return;
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/projects/${selectedProjectId}`);
+      setProjectData(response.data);
+      setError('');
+    } catch (err) {
+      setError('Failed to load project data.');
+      if (err.response?.status === 401) handleLogout();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedProjectId, token, handleLogout]);
+  useEffect(() => { fetchProjectData(); }, [fetchProjectData]);
+  const handleLoginSuccess = (newToken) => {
+    localStorage.setItem(TOKEN_KEY, newToken);
+    setToken(newToken);
+    setCurrentUser(null);
+  };
+  const handleSelectProject = (projectId) => { setSelectedProjectId(projectId); };
+  const handleBackToProjects = () => { setSelectedProjectId(null); setProjectData(null); };
+
+  if (!token) return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  if (isLoading || (token && !currentUser)) return <div className="loading-spinner-container"><div className="loading-spinner"></div></div>;
+  if (error) return <div className="app-container"><h1>Error</h1><p>{error}</p><button onClick={handleBackToProjects}>Back to Projects</button></div>;
+  if (projectData) return <DashboardPage project={projectData} onDataChange={fetchProjectData} onBack={handleBackToProjects} onLogout={handleLogout} users={allUsers} currentUser={currentUser} />;
+  return <ProjectSelectionPage onSelectProject={handleSelectProject} onLogout={handleLogout} currentUser={currentUser} />;
+}
+
+// --- THIS IS THE CRITICAL LINE ---
 export default App;
