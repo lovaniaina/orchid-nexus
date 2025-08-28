@@ -1,18 +1,16 @@
 # /netlify.toml - FINAL CORRECTED VERSION
 
 [build]
-  # Tell Netlify to run all commands from INSIDE the "frontend" folder
+  # Tell Netlify to do all its work inside the "frontend" folder
   base    = "frontend"
   
   # The command to build the site
   command = "npm run build"
   
-  # The folder that contains the finished site, RELATIVE TO THE BASE.
-  # Since the base is "frontend", this will correctly resolve to "frontend/dist"
+  # The folder that contains the finished site, RELATIVE to the base.
   publish = "dist"
 
 [[redirects]]
-  # The rewrite rule for Single-Page Applications
   from = "/*"
   to = "/index.html"
   status = 200
