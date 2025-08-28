@@ -1,17 +1,17 @@
-# /netlify.toml - FINAL CORRECTED VERSION
+# /netlify.toml - FINAL DEFINITIVE VERSION
 
 [build]
-  # Tell Netlify to run all commands from inside the "frontend" folder
   base    = "frontend"
-  
-  # The command to build the site
   command = "npm run build"
-  
-  # The folder (relative to the base) that contains the finished site
-  publish = "dist"
+  publish = "frontend/dist"
 
 [[redirects]]
-  # The rewrite rule for Single-Page Applications
   from = "/*"
   to = "/index.html"
   status = 200
+
+# This section is the final fix for the CSP 'eval' error
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' https://orchid-nexus-backend.onrender.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://orchid-nexus-backend.onrender.com wss://orchid-nexus-backend.onrender.com;"
