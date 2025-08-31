@@ -1,13 +1,8 @@
-# /netlify.toml - FINAL CORRECTED VERSION
+# /netlify.toml - FINAL CLEAN VERSION
 
 [build]
-  # Tell Netlify to do all its work inside the "frontend" folder
   base    = "frontend"
-  
-  # The command to build the site
   command = "npm run build"
-  
-  # The folder that contains the finished site, RELATIVE to the base.
   publish = "dist"
 
 [[redirects]]

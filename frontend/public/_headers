@@ -1,0 +1,4 @@
+# /frontend/public/_headers
+
+/*
+  Content-Security-Policy: default-src 'self' https://orchid-nexus-backend.onrender.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://orchid-nexus-backend.onrender.com wss://orchid-nexus-backend.onrender.com;
