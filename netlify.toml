@@ -1,11 +1,23 @@
-# /netlify.toml - FINAL CLEAN VERSION
+# /netlify.toml - THE FINAL, CORRECT CONFIGURATION
 
 [build]
+  # Tell Netlify where your frontend code lives.
   base    = "frontend"
+  # The command to build the site.
   command = "npm run build"
+  # The folder that contains the finished site, relative to the base.
   publish = "dist"
 
 [[redirects]]
+  # This is the rewrite rule for Single-Page Applications like React.
+  # It ensures that if a user reloads the page, it still works.
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  # This applies the security headers to every page on your site.
+  for = "/*"
+  [headers.values]
+    # This is the final fix for the Content Security Policy 'eval' error.
+    Content-Security-Policy = "default-src 'self' https://orchid-nexus-backend.onrender.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://orchid-nexus-backend.onrender.com wss://orchid-nexus-backend.onrender.com;"
