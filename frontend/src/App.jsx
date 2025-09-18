@@ -1,4 +1,4 @@
-// /frontend/src/App.jsx - FINAL STABLE VERSION (ALL MODULES, CHARTS DISABLED)
+// /frontend/src/App.jsx - FINAL CORRECTED AND STABLE VERSION
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
