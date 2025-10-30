@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\°°Yoga 12°°\OneDrive\Bureau\Pursuit_document\Orchid_Nexus_beyondMVP_v3\backend\venv"
+VIRTUAL_ENV="C:\Users\°°Yoga 12°°\OneDrive\Bureau\Pursuit_document\Orchid_Nexus6\backend\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

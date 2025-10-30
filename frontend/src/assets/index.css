@@ -1,0 +1,241 @@
+/* /frontend/src/assets/index.css */
+
+/* --- Font & Global Resets --- */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* --- A simple class for a loading spinner --- */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #fff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Layout --- */
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+/* --- Objective Panel --- */
+.objective-panel {
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.panel-header-objective {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  background-color: #3a3a3a;
+  border-radius: 8px 8px 0 0;
+}
+
+.panel-header-objective h3 {
+  margin: 0;
+}
+
+.objective-content {
+  padding: 1.5rem;
+}
+
+.chevron {
+  transition: transform 0.2s ease-in-out;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Activity Panel --- */
+.activity-panel {
+  background-color: #242424;
+  border: 1px solid #444;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.panel-header-activity {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background-color: #2f2f2f;
+  border-radius: 6px 6px 0 0;
+}
+
+.panel-header-activity h4 {
+  margin: 0;
+}
+
+.activity-content {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.kpi-section h5, .task-section h5 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.task-section ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.task-section li {
+  background-color: #2f2f2f;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- KPI Indicator --- */
+.kpi-indicator {
+  margin-bottom: 0.75rem;
+}
+
+.kpi-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  color: #e0e0e0;
+}
+
+.kpi-info span:last-child {
+  font-weight: bold;
+}
+
+.progress-bar-background {
+  width: 100%;
+  height: 8px;
+  background-color: #444;
+  border-radius: 4px;
+  overflow: hidden; /* This is important to make the inner bar have rounded corners */
+}
+
+.progress-bar-foreground {
+  height: 100%;
+  background-color: #4ade80; /* A nice green color */
+  border-radius: 4px;
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Sidebar & Data Entry Form --- */
+.dashboard-sidebar {
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  align-self: start; /* Prevents sidebar from stretching */
+}
+
+.dashboard-sidebar h2 {
+  margin-top: 0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+}
+
+.field-data-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.field-data-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.field-data-form select,
+.field-data-form input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #242424;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.field-data-form button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  background-color: #4ade80;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.field-data-form button:hover {
+  background-color: #36b768;
+}
