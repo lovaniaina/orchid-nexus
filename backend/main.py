@@ -4,12 +4,12 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
+
 # --- Absolute imports for all our local modules ---
 import database_models
 from database import engine, SessionLocal
 import crud
-from models import Project, DataEntryPayload
-
+from models import Project, DataEntryPayload, ObjectiveCreate, Objective, ObjectiveUpdate
 # This command creates the database tables if they don't exist
 database_models.Base.metadata.create_all(bind=engine)
 
@@ -60,6 +60,45 @@ def create_data_entry(payload: DataEntryPayload, db: Session = Depends(get_db)):
     updated_project = crud.get_project(db=db, project_id=1)
     
     return updated_project
+
+# Add this new endpoint to /backend/main.py
+
+@app.post("/projects/{project_id}/objectives", response_model=Objective)
+def create_objective_for_project(
+    project_id: int, 
+    objective: ObjectiveCreate, 
+    db: Session = Depends(get_db)
+):
+    """
+    Creates a new objective linked to a specific project.
+    """
+    return crud.create_objective(db=db, objective=objective, project_id=project_id)
+
+# Add this new endpoint to /backend/main.py
+
+@app.delete("/objectives/{objective_id}", status_code=204)
+def delete_objective(objective_id: int, db: Session = Depends(get_db)):
+    """
+    Deletes a specific objective by its ID.
+    """
+    crud.delete_objective(db=db, objective_id=objective_id)
+    # For DELETE operations, it's common to return no content.
+    # The status_code=204 tells the client the operation was successful
+    # but there is no data to return.
+    return
+
+# Add this new endpoint to /backend/main.py
+
+@app.put("/objectives/{objective_id}", response_model=Objective)
+def update_objective(
+    objective_id: int,
+    objective_update: ObjectiveUpdate,
+    db: Session = Depends(get_db)
+):
+    """
+    Updates a specific objective by its ID.
+    """
+    return crud.update_objective(db=db, objective_id=objective_id, objective_update=objective_update)
 
 @app.get("/")
 def read_root():

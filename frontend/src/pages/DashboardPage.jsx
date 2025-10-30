@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ObjectivePanel from '../components/dashboard/ObjectivePanel';
 import FieldDataForm from '../components/dashboard/FieldDataForm';
+import AddObjectiveForm from '../components/dashboard/AddObjectiveForm';
 
 function DashboardPage() {
   // State for the project data and loading status
@@ -45,6 +46,98 @@ function DashboardPage() {
     }
   };
 
+  // Add this inside the DashboardPage component
+// In /frontend/src/pages/DashboardPage.jsx, replace the old handleCreateObjective
+
+const handleCreateObjective = async (objectiveName) => {
+  // We assume we are always working with project_id: 1 for now.
+  const projectId = projectData.id; 
+
+  try {
+    // This is the new API call to our backend endpoint.
+    // We send the new objective's name in the request body.
+    const response = await axios.post(
+      `http://127.0.0.1:8000/projects/${projectId}/objectives`, 
+      { name: objectiveName }
+    );
+
+    // The backend responds with the newly created objective object.
+    const newObjective = response.data;
+
+    // --- Update the Frontend State ---
+    // It's a best practice to never modify state directly.
+    // We create a deep copy of the current project data.
+    const newProjectData = JSON.parse(JSON.stringify(projectData));
+
+    // Add the new objective to our copied data.
+    // We need to ensure the new objective has an empty 'activities' array
+    // so the frontend can render it correctly.
+    newProjectData.objectives.push({ ...newObjective, activities: [] });
+
+    // Update the state with the new project data, triggering a re-render.
+    setProjectData(newProjectData);
+
+  } catch (error) {
+    console.error("Failed to create objective:", error);
+    alert("There was an error creating the objective. Please try again.");
+  }
+};
+
+// Add this new function inside the DashboardPage component
+
+const handleDeleteObjective = async (objectiveId) => {
+  // Ask the user for confirmation before deleting
+  if (!window.confirm("Are you sure you want to delete this objective and all its contents?")) {
+    return; // Stop if the user clicks "Cancel"
+  }
+
+  try {
+    // Make the new API call to our DELETE endpoint
+    await axios.delete(`http://127.0.0.1:8000/objectives/${objectiveId}`);
+
+    // --- Update the Frontend State ---
+    // Create a new projectData object with the deleted objective filtered out.
+    const newProjectData = {
+      ...projectData,
+      objectives: projectData.objectives.filter(
+        (objective) => objective.id !== objectiveId
+      ),
+    };
+
+    // Update the state to trigger a re-render
+    setProjectData(newProjectData);
+
+  } catch (error) {
+    console.error("Failed to delete objective:", error);
+    alert("There was an error deleting the objective. Please try again.");
+  }
+};
+
+// Add this new function inside the DashboardPage component
+
+const handleUpdateObjective = async (objectiveId, newName) => {
+  try {
+    // Make the PUT request to our update endpoint
+    await axios.put(`http://127.0.0.1:8000/objectives/${objectiveId}`, {
+      name: newName,
+    });
+
+    // --- Update the Frontend State ---
+    const newProjectData = JSON.parse(JSON.stringify(projectData));
+    const objectiveToUpdate = newProjectData.objectives.find(
+      (obj) => obj.id === objectiveId
+    );
+    if (objectiveToUpdate) {
+      objectiveToUpdate.name = newName;
+    }
+    setProjectData(newProjectData);
+
+  } catch (error) {
+    console.error("Failed to update objective:", error);
+    alert("There was an error updating the objective.");
+  }
+};
+
   // Handle the loading state
   if (isLoading) {
     return <div className="loading-spinner-container"><div className="loading-spinner"></div></div>;
@@ -69,8 +162,9 @@ function DashboardPage() {
         <div className="dashboard-main-content">
           <h2>Project Objectives</h2>
           {projectData.objectives.map(objective => (
-            <ObjectivePanel key={objective.id} objective={objective} />
+            <ObjectivePanel key={objective.id} objective={objective} onDelete={handleDeleteObjective} onUpdate={handleUpdateObjective} />
           ))}
+            <AddObjectiveForm onSubmit={handleCreateObjective} />
         </div>
         <aside className="dashboard-sidebar">
           <h2>Field Data Entry</h2>

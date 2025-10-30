@@ -239,3 +239,91 @@ body {
 .field-data-form button:hover {
   background-color: #36b768;
 }
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Simple Add Form Styling --- */
+.simple-add-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.simple-add-form input {
+  flex-grow: 1; /* Allows the input to take up available space */
+  padding: 0.75rem;
+  background-color: #242424;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.simple-add-form button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  background-color: #437dff; /* A nice blue for 'Create' actions */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.simple-add-form button:hover {
+  background-color: #3b6bde;
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Panel Actions & Delete Button --- */
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.delete-button:hover {
+  background-color: #ef4444; /* red-500 */
+  color: #ffffff;
+}
+
+/* Add this to the end of /frontend/src/assets/index.css */
+
+/* --- Panel Header Editing --- */
+.edit-button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.edit-button:hover {
+  background-color: #437dff; /* blue */
+  color: #ffffff;
+}
+
+.panel-header-input {
+  font-size: 1.5em; /* Match the h3 font size */
+  font-weight: bold;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  border: 1px solid #437dff;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 80%; /* Take up most of the space */
+}

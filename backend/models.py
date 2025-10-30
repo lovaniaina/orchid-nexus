@@ -34,3 +34,9 @@ class Project(BaseModel):
 class DataEntryPayload(BaseModel):
     taskId: int
     numericValue: int
+
+class ObjectiveCreate(BaseModel):
+    name: str
+
+class ObjectiveUpdate(BaseModel):
+    name: str

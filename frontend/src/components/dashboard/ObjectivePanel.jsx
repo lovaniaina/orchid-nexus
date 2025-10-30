@@ -5,17 +5,62 @@ import React, { useState } from 'react';
 // We will create the ActivityPanel component in a later step
 // import ActivityPanel from './ActivityPanel';
 
-function ObjectivePanel({ objective }) {
+function ObjectivePanel({ objective, onDelete, onUpdate }) {
   // We use a state variable to control whether the panel's content is visible or hidden.
   const [isOpen, setIsOpen] = useState(true);
+  // Add these inside the ObjectivePanel component
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(objective.name);
+  // Add this handler inside the ObjectivePanel component
+  const handleUpdate = () => {
+    if (editedName.trim() && editedName !== objective.name) {
+      onUpdate(objective.id, editedName);
+    }
+    setIsEditing(false); // Switch back to display mode
+  };
 
   return (
     <div className="objective-panel">
       <div className="panel-header-objective" onClick={() => setIsOpen(!isOpen)}>
-        <h3>{objective.name}</h3>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+            onBlur={handleUpdate} // Save when the input loses focus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleUpdate(); // Save on Enter key
+              if (e.key === 'Escape') setIsEditing(false); // Cancel on Escape key
+            }}
+            autoFocus // Automatically focus the input when it appears
+            className="panel-header-input"
+          />
+        ) : (
+          <h3>{objective.name}</h3>
+        )}
         {/* This little arrow will rotate based on the isOpen state */}
-        <span className={`chevron ${isOpen ? 'open' : ''}`}>▼</span>
+        <div className="panel-actions">
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditing(true);
+            }} 
+            className="edit-button"
+          >
+            ✏️
+          </button>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents the panel from toggling when the button is clicked
+              onDelete(objective.id);
+            }} 
+            className="delete-button"
+          >
+            🗑️
+          </button>
+          <span className={`chevron ${isOpen ? 'open' : ''}`}>▼</span>
       </div>
+    </div>
       
       {/* Conditionally render the content based on the isOpen state */}
       {isOpen && (
