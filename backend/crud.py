@@ -50,6 +50,18 @@ def create_objective(db: Session, objective: pydantic_models.ObjectiveCreate, pr
 
 # Add this new function inside /backend/crud.py
 
+def create_activity(db: Session, activity: pydantic_models.ActivityCreate, objective_id: int):
+    """
+    Creates a new Activity record in the database and links it to an objective.
+    """
+    db_activity = db_models.Activity(name=activity.name, objective_id=objective_id)
+    db.add(db_activity)
+    db.commit()
+    db.refresh(db_activity)
+    return db_activity
+
+# Add this new function inside /backend/crud.py
+
 def delete_objective(db: Session, objective_id: int):
     """
     Deletes an objective (and all its children) from the database.
@@ -64,6 +76,16 @@ def delete_objective(db: Session, objective_id: int):
         db.commit()
     
     return objective_to_delete # Return the deleted item (or None if not found)
+
+def delete_activity(db: Session, activity_id: int):
+    """
+    Deletes an activity (and its children) from the database.
+    """
+    activity_to_delete = db.query(db_models.Activity).filter(db_models.Activity.id == activity_id).first()
+    if activity_to_delete:
+        db.delete(activity_to_delete)
+        db.commit()
+    return activity_to_delete
 
 # --- UPDATE Functions ---
 
@@ -95,3 +117,16 @@ def update_objective(db: Session, objective_id: int, objective_update: pydantic_
         db.refresh(db_objective)
         
     return db_objective
+
+# Add this new function inside /backend/crud.py
+
+def update_activity(db: Session, activity_id: int, activity_update: pydantic_models.ActivityUpdate):
+    """
+    Updates an activity's name in the database.
+    """
+    db_activity = db.query(db_models.Activity).filter(db_models.Activity.id == activity_id).first()
+    if db_activity:
+        db_activity.name = activity_update.name
+        db.commit()
+        db.refresh(db_activity)
+    return db_activity

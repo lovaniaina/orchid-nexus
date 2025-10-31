@@ -40,3 +40,9 @@ class ObjectiveCreate(BaseModel):
 
 class ObjectiveUpdate(BaseModel):
     name: str
+
+class ActivityCreate(BaseModel):
+    name: str
+
+class ActivityUpdate(BaseModel):
+    name: str

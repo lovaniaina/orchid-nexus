@@ -1,11 +1,12 @@
 // /frontend/src/components/dashboard/ObjectivePanel.jsx
 
 import ActivityPanel from './ActivityPanel';
+import AddActivityForm from './AddActivityForm';
 import React, { useState } from 'react';
 // We will create the ActivityPanel component in a later step
 // import ActivityPanel from './ActivityPanel';
 
-function ObjectivePanel({ objective, onDelete, onUpdate }) {
+function ObjectivePanel({ objective, onDelete, onUpdate, onCreateActivity, onDeleteActivity, onUpdateActivity }) {
   // We use a state variable to control whether the panel's content is visible or hidden.
   const [isOpen, setIsOpen] = useState(true);
   // Add these inside the ObjectivePanel component
@@ -71,8 +72,9 @@ function ObjectivePanel({ objective, onDelete, onUpdate }) {
             We will build this component next.
           */}
           {objective.activities.map(activity => (
-              <ActivityPanel key={activity.id} activity={activity} />
+              <ActivityPanel key={activity.id} activity={activity} onDelete={onDeleteActivity} onUpdate={onUpdateActivity} />
               ))}
+          <AddActivityForm onSubmit={(activityName) => onCreateActivity(objective.id, activityName)} />
         </div>
       )}
     </div>

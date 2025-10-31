@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 import database_models
 from database import engine, SessionLocal
 import crud
-from models import Project, DataEntryPayload, ObjectiveCreate, Objective, ObjectiveUpdate
+from models import Project, DataEntryPayload, ObjectiveCreate, Objective, ObjectiveUpdate, ActivityCreate, Activity, ActivityUpdate
 # This command creates the database tables if they don't exist
 database_models.Base.metadata.create_all(bind=engine)
 
@@ -75,6 +75,17 @@ def create_objective_for_project(
     return crud.create_objective(db=db, objective=objective, project_id=project_id)
 
 # Add this new endpoint to /backend/main.py
+@app.put("/activities/{activity_id}", response_model=Activity)
+def update_activity(
+    activity_id: int,
+    activity_update: ActivityUpdate,
+    db: Session = Depends(get_db)
+):
+    """
+    Updates a specific activity by its ID.
+    """
+    return crud.update_activity(db=db, activity_id=activity_id, activity_update=activity_update)
+# Add this new endpoint to /backend/main.py
 
 @app.delete("/objectives/{objective_id}", status_code=204)
 def delete_objective(objective_id: int, db: Session = Depends(get_db)):
@@ -99,6 +110,29 @@ def update_objective(
     Updates a specific objective by its ID.
     """
     return crud.update_objective(db=db, objective_id=objective_id, objective_update=objective_update)
+
+# Add this new endpoint to /backend/main.py
+
+@app.post("/objectives/{objective_id}/activities", response_model=Activity)
+def create_activity_for_objective(
+    objective_id: int,
+    activity: ActivityCreate,
+    db: Session = Depends(get_db)
+):
+    """
+    Creates a new activity linked to a specific objective.
+    """
+    return crud.create_activity(db=db, activity=activity, objective_id=objective_id)
+
+# Add this new endpoint to /backend/main.py
+
+@app.delete("/activities/{activity_id}", status_code=204)
+def delete_activity(activity_id: int, db: Session = Depends(get_db)):
+    """
+    Deletes a specific activity by its ID.
+    """
+    crud.delete_activity(db=db, activity_id=activity_id)
+    return
 
 @app.get("/")
 def read_root():

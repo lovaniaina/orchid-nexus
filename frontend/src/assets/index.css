@@ -327,3 +327,15 @@ body {
   padding: 0.25rem 0.5rem;
   width: 80%; /* Take up most of the space */
 }
+
+/* Add this to the end of /frontend/src/assets/index.css */
+.panel-header-input-small {
+  font-size: 1.17em; /* Match h4 font size */
+  font-weight: bold;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+  border: 1px solid #437dff;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  width: 70%;
+}

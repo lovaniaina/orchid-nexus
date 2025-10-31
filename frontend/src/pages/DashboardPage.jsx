@@ -138,6 +138,60 @@ const handleUpdateObjective = async (objectiveId, newName) => {
   }
 };
 
+// Add this new function inside the DashboardPage component
+
+const handleCreateActivity = async (objectiveId, activityName) => {
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/objectives/${objectiveId}/activities`,
+      { name: activityName }
+    );
+
+    const newActivity = response.data;
+
+    // --- Update Frontend State ---
+    const newProjectData = JSON.parse(JSON.stringify(projectData));
+    const targetObjective = newProjectData.objectives.find(
+      (obj) => obj.id === objectiveId
+    );
+
+    if (targetObjective) {
+      // Add the new activity to the correct objective, ensuring it has empty
+      // arrays for its own children (kpis and tasks)
+      targetObjective.activities.push({ ...newActivity, kpis: [], tasks: [] });
+      setProjectData(newProjectData);
+    }
+  } catch (error) {
+    console.error("Failed to create activity:", error);
+    alert("There was an error creating the activity.");
+  }
+};
+
+// Add these new functions inside the DashboardPage component
+
+const handleDeleteActivity = async (activityId) => {
+  if (!window.confirm("Are you sure you want to delete this activity?")) return;
+  try {
+    await axios.delete(`http://127.0.0.1:8000/activities/${activityId}`);
+    // To update the state, we need to refresh the whole project
+    // This is simpler for now than manually removing the nested activity
+    const response = await axios.get(`http://127.0.0.1:8000/projects/${projectData.id}`);
+    setProjectData(response.data);
+  } catch (error) {
+    console.error("Failed to delete activity:", error);
+  }
+};
+
+const handleUpdateActivity = async (activityId, newName) => {
+  try {
+    await axios.put(`http://127.0.0.1:8000/activities/${activityId}`, { name: newName });
+    const response = await axios.get(`http://127.0.0.1:8000/projects/${projectData.id}`);
+    setProjectData(response.data);
+  } catch (error) {
+    console.error("Failed to update activity:", error);
+  }
+};
+
   // Handle the loading state
   if (isLoading) {
     return <div className="loading-spinner-container"><div className="loading-spinner"></div></div>;
@@ -162,7 +216,7 @@ const handleUpdateObjective = async (objectiveId, newName) => {
         <div className="dashboard-main-content">
           <h2>Project Objectives</h2>
           {projectData.objectives.map(objective => (
-            <ObjectivePanel key={objective.id} objective={objective} onDelete={handleDeleteObjective} onUpdate={handleUpdateObjective} />
+            <ObjectivePanel key={objective.id} objective={objective} onDelete={handleDeleteObjective} onUpdate={handleUpdateObjective} onCreateActivity={handleCreateActivity} onDeleteActivity={handleDeleteActivity} onUpdateActivity={handleUpdateActivity} />
           ))}
             <AddObjectiveForm onSubmit={handleCreateObjective} />
         </div>
